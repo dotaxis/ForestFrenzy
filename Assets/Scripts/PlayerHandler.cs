@@ -7,18 +7,26 @@ public class PlayerHandler : MonoBehaviour
     public float playerSpeed;
     public float rollDelay;
     public float playerJumpHeight;
-    public static bool isDead;
+    public bool isDead;
     public bool isOnGround = true;
     public bool isRolling = false;
     public bool isJumping = false;
+    public bool isRunning = false;
     public Rigidbody2D rb;
     public GameObject player;
     public BoxCollider2D playerBox;
     public TouchHandler touchHandle = new TouchHandler();
+    public Animator animator;
+    public AudioHandler SFX;
+
 
     // Start is called before the first frame update
     void Start()
-    { 
+    {
+        Input.simulateMouseWithTouches = false;
+
+        SFX = GameObject.Find("Music").GetComponent<AudioHandler>();
+        animator = this.GetComponent<Animator>();
         rb = this.GetComponent<Rigidbody2D>();
         playerBox = this.GetComponent<BoxCollider2D>();
         isDead = false;
@@ -26,66 +34,49 @@ public class PlayerHandler : MonoBehaviour
 
     void Die()
     {
+        //isRunning = false;
         isDead = true;
-        //foreach (GameObject block in GameObject.FindGameObjectsWithTag("deathBlock"))
-        //    block.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         rb.velocity = Vector2.zero;
-        //ScrollHandler.rb.velocity = Vector2.zero;
-        //rb.constraints = RigidbodyConstraints2D.FreezeAll;
         GameControl.instance.GameOver();
-        // todo
     }
 
     void Jump()
     {
-        //Debug.Log("shit: " + (playerJumpHeight * Time.deltaTime).ToString());
+        //isRunning = false;
+        SFX.PlayJumpSound();
         rb.velocity = new Vector2(rb.velocity.x, playerJumpHeight);
-    }
-
-
-    void UnRoll()
-    {
-        //playerBox.size = new Vector2(0.49f, 0.49f);
-        isRolling = false;
     }
     
     IEnumerator Roll()
     {
+        isRolling = true;
+        SFX.PlayRollSound();
+        playerBox.size = new Vector2(playerBox.size.x, playerBox.size.y * 0.5f);
+        playerBox.offset = new Vector2(playerBox.offset.x, playerBox.offset.y * 0.5f);
         float elapsedTime = 0f;
         while (elapsedTime < rollDelay * Time.fixedDeltaTime)
         {
-            isRolling = true;
-            transform.localScale = new Vector3(transform.localScale.x, 0.5f, 1);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        transform.localScale = new Vector3(transform.localScale.x, 1f, 1);
+        playerBox.size = new Vector2(playerBox.size.x, playerBox.size.y * 2f);
+        playerBox.offset = new Vector2(playerBox.offset.x, playerBox.offset.y * 2f);
         isRolling = false;
-        //playerBox.size = new Vector2(0.49f, 0.46f);
-        //Invoke("UnRoll", rollDelay);
     }
 
 
     void ControlPlayer()
     {
-        isOnGround = playerBox.IsTouching(GameObject.Find("floor").GetComponent<BoxCollider2D>())
-            || playerBox.IsTouching(GameObject.Find("floor2").GetComponent<BoxCollider2D>());
-
         if (isOnGround && !isRolling)
         {
             if (touchHandle.IsLeftClick())
-            {
                 Jump();
-            } else if (touchHandle.IsRightClick())
-            {
+            else if (touchHandle.IsRightClick())
                 StartCoroutine(Roll());
-            }
         }
-
-        //rb.velocity = new Vector2(playerSpeed, rb.velocity.y);
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider is BoxCollider2D && collision.collider.CompareTag("deathBlock"))
         {
@@ -93,13 +84,26 @@ public class PlayerHandler : MonoBehaviour
         }
     }
 
-
-    // Update is called once per frame
     void Update()
     {
+        isOnGround = playerBox.IsTouching(GameObject.Find("floor1").GetComponent<BoxCollider2D>())
+            || playerBox.IsTouching(GameObject.Find("floor2").GetComponent<BoxCollider2D>());
+
+        /*if (isOnGround && !isDead && !isRolling && !isRunning)
+        {
+            isRunning = true;
+            //SFX.playRunSound();
+        }*/
+
         if (!isDead)
         {
             ControlPlayer();
         }
+
+
+        animator.SetBool("dead", isDead);
+        animator.SetBool("rolling", isRolling);
+        animator.SetBool("onground", isOnGround);
+        animator.SetFloat("velocity.y", rb.velocity.y);
     }
 }

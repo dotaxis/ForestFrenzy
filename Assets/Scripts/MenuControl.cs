@@ -2,26 +2,53 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+using static DotTypes;
 
 public class MenuControl : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+
+    public void LoadScene(string Scene)
     {
-        GameObject.Find("HighScoreText").GetComponent<Text>().text = "High Score: " + PlayerPrefs.GetInt("HighScore", 0).ToString();
+        SceneManager.LoadScene(Scene);
     }
 
-    // Update is called once per frame
-    void Update()
+
+    public void ShowMainMenu()
     {
-        if (Input.GetMouseButtonUp(0))
+        ToggleMenu("MainMenu", Set.Active);
+        ToggleMenu("OptionsMenu", Set.Inactive);
+        ToggleMenu("StatsMenu", Set.Inactive);
+    }
+
+    public void ShowOptionsMenu()
+    {
+        ToggleMenu("OptionsMenu", Set.Active);
+        ToggleMenu("MainMenu", Set.Inactive);
+        ToggleMenu("StatsMenu", Set.Inactive);
+    }
+
+    public void ShowStatsMenu()
+    {
+        ToggleMenu("StatsMenu", Set.Active);
+        ToggleMenu("MainMenu", Set.Inactive);
+        ToggleMenu("OptionsMenu", Set.Inactive);
+    }
+
+    public static void ToggleMenu(string menuName, Set toggle)
+    {
+        if (GameObject.Find(menuName))
         {
-            Debug.Log("pressed mouse button");
-            SceneManager.LoadScene("GameScene");
-        } else if (Input.GetMouseButtonUp(1))
-        {
-            //PlayerPrefs.DeleteAll();
+            foreach (Transform t in GameObject.Find(menuName).GetComponentsInChildren<Transform>(true))
+            {
+                if (t.gameObject.name != menuName)
+                {
+                    t.gameObject.SetActive(toggle.isActive() ? true : false);
+                   //Debug.Log("Set " + t.gameObject.name + " to " + (toggle.isActive() ? "active" : "inactive"));
+                }
+            }
+            Debug.Log("Set " + menuName + " to " + (toggle.isActive() ? "active" : "inactive"));
+        } else {
+            Debug.Log(menuName + " not found");
         }
     }
 }

@@ -9,7 +9,7 @@ public class BackgroundRepeat : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        groundLength = GetComponent<SpriteRenderer>().size.x;
+        groundLength = GetComponentInChildren<SpriteRenderer>().bounds.size.x;
     }
 
     void Reposition()

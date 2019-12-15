@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - deathBlock
+  - Music
   layers:
   - Default
   - TransparentFX
@@ -14,7 +15,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - BG
   - 
   - 
   - 
@@ -39,6 +40,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: BG
+    uniqueID: 2573325243
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class BlockPool : MonoBehaviour
 {
-    public static int blockPoolSize = 5;
+    public static int blockPoolSize = 8;
     public GameObject blockPrefab;
 
     private GameObject[] blocks;
     private Vector2 blockPoolPosition = new Vector2(-10f, -10f); // outside camera bounds
-    private float xPosMin = 4f;
-    private float xPosMax = 6f;
+    private float xPosMin = 4.75f;
+    private float xPosMax = 5.25f;
     private int currentBlock = 0;
 
     int CoinFlip()
@@ -19,7 +19,7 @@ public class BlockPool : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         blocks = new GameObject[blockPoolSize];
         for (int i = 0; i < blockPoolSize; i++)
@@ -32,7 +32,7 @@ public class BlockPool : MonoBehaviour
     void Update()
     {
 
-        if (!PlayerHandler.isDead && blocks[currentBlock].transform.position.x <= 2)
+        if (!GameObject.Find("Player").GetComponent<PlayerHandler>().isDead && blocks[currentBlock].transform.position.x <= 3.5f)
         {
             currentBlock++;
             if (currentBlock >= blockPoolSize)
