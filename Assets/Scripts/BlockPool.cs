@@ -39,7 +39,7 @@ public class BlockPool : MonoBehaviour
                 currentBlock = 0;
             
             //timeElapsed = 0f;
-            float yPos = (CoinFlip() == 0) ? -2f : -1.7f;
+            float yPos = (CoinFlip() == 0) ? -2.25f : -1.95f;
             blocks[currentBlock].transform.position = new Vector2(Random.Range(xPosMin, xPosMax), yPos);
             
         }

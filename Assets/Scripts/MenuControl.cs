@@ -3,9 +3,47 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static DotTypes;
+using System.Runtime.InteropServices;
+
+
 
 public class MenuControl : MonoBehaviour
 {
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+    [DllImport("__Internal")] private static extern bool IsWebGLMobile();
+#else
+    bool IsWebGLMobile()
+    {
+        Debug.Log("Not WebGL");
+        return false;
+    }
+#endif
+
+
+    private string TutorialText;
+
+    void Start()
+    {
+        Debug.Log("Mobile: " + IsWebGLMobile().ToString());
+        if ((Application.platform == RuntimePlatform.WebGLPlayer && IsWebGLMobile())
+            || Application.platform == RuntimePlatform.Android)
+        {
+            TutorialText = "tap left side to jump\n" +
+                "tap right side to slide";
+        } else {
+            TutorialText = "left click to jump\n" +
+                "right click to slide";
+        }
+    }
+
+    void Update()
+    {
+        if (Application.platform == RuntimePlatform.Android && Input.GetKey(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+    }
 
     public void LoadScene(string Scene)
     {
@@ -17,19 +55,20 @@ public class MenuControl : MonoBehaviour
     {
         ToggleMenu("MainMenu", Set.Active);
         ToggleMenu("OptionsMenu", Set.Inactive);
-        ToggleMenu("StatsMenu", Set.Inactive);
+        ToggleMenu("TutorialMenu", Set.Inactive);
     }
 
     public void ShowOptionsMenu()
     {
         ToggleMenu("OptionsMenu", Set.Active);
         ToggleMenu("MainMenu", Set.Inactive);
-        ToggleMenu("StatsMenu", Set.Inactive);
+        ToggleMenu("TutorialMenu", Set.Inactive);
     }
 
-    public void ShowStatsMenu()
+    public void ShowTutorialMenu()
     {
-        ToggleMenu("StatsMenu", Set.Active);
+        ToggleMenu("TutorialMenu", Set.Active);
+        GameObject.Find("TutorialTMP").GetComponent<TMPro.TextMeshProUGUI>().text = TutorialText;
         ToggleMenu("MainMenu", Set.Inactive);
         ToggleMenu("OptionsMenu", Set.Inactive);
     }

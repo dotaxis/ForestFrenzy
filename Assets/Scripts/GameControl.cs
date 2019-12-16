@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+﻿using UnityEngine;
 using TMPro;
 using static MenuControl;
 using static DotTypes;
@@ -13,12 +9,14 @@ public class GameControl : MonoBehaviour
     public float scrollSpeed;
     public bool gameOver = false;
     private int score = 0;
-
+    private AdvertHandler Advert;
 
     void Start()
     {
+        Advert = gameObject.AddComponent<AdvertHandler>();
         ToggleMenu("GameOverMenu", Set.Inactive);
     }
+
 
     public void Score()
     {
@@ -31,12 +29,18 @@ public class GameControl : MonoBehaviour
         }
     }
 
+    
+
     public void GameOver()
     {
         gameOver = true;
         ToggleMenu("GameOverMenu", Set.Active);
         GameObject.Find("HighScoreTMP").GetComponent<TextMeshProUGUI>().text =
             "high score\n" + PlayerPrefs.GetInt("HighScore", 0);
+
+        #if UNITY_ANDROID
+            Advert.ShowAd(5);
+        #endif
     }
 
     void Awake()

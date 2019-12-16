@@ -133,15 +133,15 @@ public class AudioHandler : MonoBehaviour
     {
         JumpAudio.Stop();
         RollAudio.Stop();
-        JumpSound = GroundSounds[new System.Random().Next(0, GroundSounds.Length)];
-        JumpAudio.PlayOneShot(JumpSound);
+        JumpAudio.clip = GroundSounds[new System.Random().Next(0, GroundSounds.Length)];
+        JumpAudio.Play();
     }
     public void PlayRollSound()
     {
         RollAudio.Stop();
         JumpAudio.Stop();
-        RollSound = GroundSounds[new System.Random().Next(0, GroundSounds.Length)];
-        RollAudio.PlayOneShot(RollSound);
+        RollAudio.clip = GroundSounds[new System.Random().Next(0, GroundSounds.Length)];
+        RollAudio.Play();
     }
 
     void Awake()
