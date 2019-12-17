@@ -35,6 +35,7 @@ public class PlayerHandler : MonoBehaviour
     void Die()
     {
         //isRunning = false;
+        SFX.PlayDeathSound();
         isDead = true;
         rb.velocity = Vector2.zero;
         GameControl.instance.GameOver();
@@ -49,8 +50,8 @@ public class PlayerHandler : MonoBehaviour
     
     IEnumerator Roll()
     {
-        isRolling = true;
         SFX.PlayRollSound();
+        isRolling = true;
         playerBox.size = new Vector2(playerBox.size.x, playerBox.size.y * 0.5f);
         playerBox.offset = new Vector2(playerBox.offset.x, playerBox.offset.y * 0.5f);
         float elapsedTime = 0f;

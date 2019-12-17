@@ -39,7 +39,7 @@ public class GameControl : MonoBehaviour
             "high score\n" + PlayerPrefs.GetInt("HighScore", 0);
 
         #if UNITY_ANDROID
-            Advert.ShowAd(5);
+            Advert.ShowAd(4);
         #endif
     }
 

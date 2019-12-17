@@ -29,10 +29,10 @@ public class MenuControl : MonoBehaviour
         if ((Application.platform == RuntimePlatform.WebGLPlayer && IsWebGLMobile())
             || Application.platform == RuntimePlatform.Android)
         {
-            TutorialText = "tap left side to jump\n" +
+            TutorialText = "tap left side to jump\n\n" +
                 "tap right side to slide";
         } else {
-            TutorialText = "left click to jump\n" +
+            TutorialText = "left click to jump\n\n" +
                 "right click to slide";
         }
     }

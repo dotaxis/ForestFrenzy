@@ -14,10 +14,13 @@ public class AudioHandler : MonoBehaviour
 
     public AudioSource JumpAudio;
     public AudioSource RollAudio;
+    public AudioSource DeathAudio;
     public AudioClip JumpSound;
     public AudioClip RollSound;
+    public AudioClip DeathSound;
 
     public AudioClip[] GroundSounds;
+    public AudioClip[] DeathSounds;
 
     public float MusicVolume;
     public float SFXVolume;
@@ -26,23 +29,30 @@ public class AudioHandler : MonoBehaviour
     {
         JumpAudio = gameObject.AddComponent<AudioSource>();
         RollAudio = gameObject.AddComponent<AudioSource>();
+        DeathAudio = gameObject.AddComponent<AudioSource>();
         LoadSounds();
     }
 
     void Update()
     {
-        gameObject.GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat("MusicVolume", 1); ;
+        gameObject.GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat("MusicVolume", 1);
         JumpAudio.volume = PlayerPrefs.GetFloat("SFXVolume", 0.5f);
         RollAudio.volume = PlayerPrefs.GetFloat("SFXVolume", 0.5f);
+        DeathAudio.volume = PlayerPrefs.GetFloat("SFXVolume", 0.5f);
     }
 
     void LoadSounds()
     {
         GroundSounds = new AudioClip[5];
-
         for (int i = 0; i < GroundSounds.Length; i++)
         {
-            GroundSounds[i] = (AudioClip) Resources.Load("Sounds/step" + i);
+            GroundSounds[i] = (AudioClip)Resources.Load("Sounds/step" + i);
+        }
+        
+        DeathSounds = new AudioClip[5];
+        for (int i = 0; i < DeathSounds.Length; i++)
+        {
+            DeathSounds[i] = (AudioClip)Resources.Load("Sounds/death" + i);
         }
     }
 
@@ -128,20 +138,20 @@ public class AudioHandler : MonoBehaviour
             }
         }
     }*/
-
     public void PlayJumpSound()
     {
-        JumpAudio.Stop();
-        RollAudio.Stop();
-        JumpAudio.clip = GroundSounds[new System.Random().Next(0, GroundSounds.Length)];
-        JumpAudio.Play();
+        JumpSound = GroundSounds[new System.Random().Next(0, GroundSounds.Length)];
+        JumpAudio.PlayOneShot(JumpSound);
     }
     public void PlayRollSound()
     {
-        RollAudio.Stop();
-        JumpAudio.Stop();
-        RollAudio.clip = GroundSounds[new System.Random().Next(0, GroundSounds.Length)];
-        RollAudio.Play();
+        RollSound = GroundSounds[new System.Random().Next(0, GroundSounds.Length)];
+        RollAudio.PlayOneShot(RollSound);
+    }
+    public void PlayDeathSound()
+    {
+        DeathSound = DeathSounds[new System.Random().Next(0, GroundSounds.Length)];
+        DeathAudio.PlayOneShot(DeathSound);
     }
 
     void Awake()
